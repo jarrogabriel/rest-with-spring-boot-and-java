@@ -1,4 +1,4 @@
-package br.com.jtpsolution.exceptions;
+package br.com.springjava.exceptions;
 
 import java.io.Serializable;
 import java.util.Date;
