@@ -1,4 +1,4 @@
-package br.com.jtpsolution.exceptions;
+package br.com.springjava.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
