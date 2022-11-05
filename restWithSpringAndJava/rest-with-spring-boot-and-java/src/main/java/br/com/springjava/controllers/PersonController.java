@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.springjava.model.Person;
+import br.com.springjava.data.vo.v1.PersonVO;
 import br.com.springjava.services.PersonServices;
 
 @RestController
@@ -23,27 +23,28 @@ public class PersonController {
 
 	@Autowired
 	private PersonServices personServices;
-	// PersonServices personServices = new PersonServices();
+	// PersonVOServices personServices = new PersonVOServices();
 
 	@GetMapping(value = "/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person findById(@PathVariable(value = "personId") Long personId) throws Exception {
+	public PersonVO findById(@PathVariable(value = "personId") Long personId) throws Exception {
 
 		return personServices.findById(personId);
 	}
+	
 	@GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Person> findAll() {
+	public List<PersonVO> findAll() {
 		
 		return personServices.findAll();
 	}
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person create(@RequestBody Person person) {
+	public PersonVO create(@RequestBody PersonVO person) {
 		
 		return personServices.create(person);
 	}
 	
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person update(@RequestBody Person person) {
+	public PersonVO update(@RequestBody PersonVO person) {
 		
 		return personServices.update(person);
 	}
