@@ -6,7 +6,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.springjava.data.vo.v1.PersonVO;
 import br.com.springjava.exceptions.ResourceNotFoundException;
+import br.com.springjava.mapper.DozerMapper;
 import br.com.springjava.model.Person;
 import br.com.springjava.repositories.PersonRepository;
 
@@ -18,36 +20,46 @@ public class PersonServices {
 	@Autowired
 	PersonRepository personRepository;
 
-	public List<Person> findAll() {
+	public List<PersonVO> findAll() {
 
 		logger.info("Finding all people!");
 
-		return personRepository.findAll();
+		return DozerMapper.parseListObjects(personRepository.findAll(), PersonVO.class);
 	}
 
-	public Person findById(Long personId) {
+	public PersonVO findById(Long personId) {
 
 		logger.info("Finding one person!");
 
-		Person person = new Person();
-
-		return personRepository.findById(personId)
+		Person person = personRepository.findById(personId)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
+		return DozerMapper.parseObject(person, PersonVO.class);
 	}
 
-	public Person create(Person person) {
+	public PersonVO create(PersonVO personVO) {
 
 		logger.info("Creating one person");
 
-		return personRepository.save(person);
+		// Converte o recebido personVO para Person
+		Person person = DozerMapper.parseObject(personVO, Person.class);
+
+		// Salva o Person convertido e já converte o resultado do save pra PersonVO para
+		// poder retornar o método
+		return DozerMapper.parseObject(personRepository.save(person), PersonVO.class);
 
 	}
 
-	public Person update(Person person) {
+	public PersonVO update(PersonVO personVO) {
 
 		logger.info("Updating one person");
 
-		return personRepository.save(person);
+		// Converte o recebido personVO para Person
+		Person person = DozerMapper.parseObject(personVO, Person.class);
+
+		// Salva o Person convertido e já converte o resultado do save pra PersonVO para
+		// poder retornar o método
+		return DozerMapper.parseObject(personRepository.save(person), PersonVO.class);
 
 	}
 
@@ -55,11 +67,11 @@ public class PersonServices {
 
 		logger.info("Deleting one person");
 
-		Person entity = personRepository.findById(personId)
+		Person person = personRepository.findById(personId)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
-		
-		personRepository.delete(entity);
-		
+
+		personRepository.delete(person);
+
 	}
 
 }
