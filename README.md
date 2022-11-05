@@ -20,6 +20,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Java](https://www.java.com/)
 - [Spring](https://spring.io/)
 - [Postman](https://www.postman.com/)
+- [MySQL](https://www.mysql.com/)
 
 ### Autor
 
