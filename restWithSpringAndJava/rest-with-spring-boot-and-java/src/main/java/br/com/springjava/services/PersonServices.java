@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.springjava.data.vo.v1.PersonVO;
+import br.com.springjava.data.vo.v2.PersonVOV2;
 import br.com.springjava.exceptions.ResourceNotFoundException;
 import br.com.springjava.mapper.DozerMapper;
+import br.com.springjava.mapper.custom.PersonMapper;
 import br.com.springjava.model.Person;
 import br.com.springjava.repositories.PersonRepository;
 
@@ -19,6 +21,9 @@ public class PersonServices {
 
 	@Autowired
 	PersonRepository personRepository;
+
+	@Autowired
+	PersonMapper personMapper;
 
 	public List<PersonVO> findAll() {
 
@@ -71,6 +76,19 @@ public class PersonServices {
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
 		personRepository.delete(person);
+
+	}
+
+	public PersonVOV2 createV2(PersonVOV2 personVOV2) {
+
+		logger.info("Creating one person with Person V2!");
+
+		// Converte o recebido personVOV2 para Person através do Mapper customizado
+		Person person = personMapper.convertVOToEntity(personVOV2);
+
+		// Salva o Person convertido e já converte o resultado do save pra PersonVOV2 para
+		// poder retornar o método
+		return personMapper.convertEntityToVO(personRepository.save(person));
 
 	}
 

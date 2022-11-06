@@ -9,7 +9,7 @@
 		<version>3.0.0-M4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.jtpsolution</groupId>
+	<groupId>br.com.springjava</groupId>
 	<artifactId>rest-with-spring-boot-and-java</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest-with-spring-boot-and-java</name>
