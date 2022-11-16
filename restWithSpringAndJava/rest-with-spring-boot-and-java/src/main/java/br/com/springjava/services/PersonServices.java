@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.springjava.controllers.PersonController;
 import br.com.springjava.data.vo.v1.PersonVO;
+import br.com.springjava.exceptions.RequiredObjectIsNullException;
 import br.com.springjava.exceptions.ResourceNotFoundException;
 import br.com.springjava.mapper.DozerMapper;
 import br.com.springjava.model.Person;
@@ -51,6 +52,12 @@ public class PersonServices {
 
 	public PersonVO create(PersonVO personVO) {
 
+		
+		if(personVO == null)
+		{
+			throw new RequiredObjectIsNullException();
+		}
+		
 		logger.info("Creating one person");
 
 		// Converte o recebido personVO para Person
@@ -67,6 +74,11 @@ public class PersonServices {
 	}
 
 	public PersonVO update(PersonVO personVO) {
+		
+		if(personVO == null)
+		{
+			throw new RequiredObjectIsNullException();
+		}
 
 		logger.info("Updating one person");
 

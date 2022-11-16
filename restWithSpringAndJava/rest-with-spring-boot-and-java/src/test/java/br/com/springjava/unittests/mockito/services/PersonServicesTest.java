@@ -2,8 +2,9 @@ package br.com.springjava.unittests.mockito.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.springjava.data.vo.v1.PersonVO;
+import br.com.springjava.exceptions.RequiredObjectIsNullException;
 import br.com.springjava.model.Person;
 import br.com.springjava.repositories.PersonRepository;
 import br.com.springjava.services.PersonServices;
@@ -61,12 +63,24 @@ class PersonServicesTest {
 
 	@Test
 	void testFindAll() {
-		fail("Not yet implemented");
+		List<Person> listPerson = mockPerson.mockEntityList();
+
+		Mockito.when(personRepository.findAll()).thenReturn(listPerson);
+		List<PersonVO> listPersonVO = personService.findAll();
+
+		assertNotNull(listPersonVO);
+
+		listPersonVO.stream().forEach((personVO) -> {
+			assertNotNull(personVO.getKey());
+			assertNotNull(personVO.getLinks());
+			assertNotNull(personVO.toString().contains("links: "));
+		});
 	}
 
 	@Test
 	void testCreate() {
-		// - Cria uma instância de como Person chega no endpoint antes do save no repository
+		// - Cria uma instância de como Person chega no endpoint antes do save no
+		// repository
 		// - De modo ainda não persistido no banco
 		Person personPrePersist = mockPerson.mockEntity();
 
@@ -76,18 +90,22 @@ class PersonServicesTest {
 		personPersisted.setId(1L);
 
 		// Configuro o Mockito para que, quando houver um save dentro do método create,
-		// ele suspenda o save (para não alterar nada no banco) e me retorne o Person "persistido"
+		// ele suspenda o save (para não alterar nada no banco) e me retorne o Person
+		// "persistido"
 		Mockito.when(personRepository.save(personPrePersist)).thenReturn(personPersisted);
 
-		// Após configurar a ação do mockito, eu instâncio uma PersonVO que será "gravada"
+		// Após configurar a ação do mockito, eu instâncio uma PersonVO que será
+		// "gravada"
 		PersonVO personVO = mockPerson.mockVO();
 
 		// Chamo o método de gravação e, o Mockito, dentro do método create, se
-		// encarrega de suspender o save e simular o resultado do mesmo me retornando personPersisted
+		// encarrega de suspender o save e simular o resultado do mesmo me retornando
+		// personPersisted
 		PersonVO personVOPersisted = personService.create(personVO);
 
 		// E por último, configuro meus testes de modo a garantir que a Person gravada
-		// não seja nulla, tenha um identificador único e possua links de suporte a HATEOAS
+		// não seja nulla, tenha um identificador único e possua links de suporte a
+		// HATEOAS
 		assertNotNull(personVOPersisted);
 		assertNotNull(personVOPersisted.getKey());
 		assertNotNull(personVOPersisted.getLinks());
@@ -95,40 +113,65 @@ class PersonServicesTest {
 	}
 
 	@Test
+	void testCreateWithNullPerson() {
+
+		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+			personService.create(null);
+		});
+
+		String expectedMessage = "It is not allowed to persist a null object!";
+		String actualMessage = exception.getMessage();
+
+		assertEquals(expectedMessage, actualMessage);
+	}
+
+	@Test
 	void testUpdate() {
-				Person personPreUpdate = mockPerson.mockEntity();
-				personPreUpdate.setId(1L);
-				
-				Person personUpdated = personPreUpdate;
-				personUpdated.setId(1L);
+		Person personPreUpdate = mockPerson.mockEntity();
+		personPreUpdate.setId(1L);
 
-				Mockito.when(personRepository.save(personPreUpdate)).thenReturn(personUpdated);
+		Person personUpdated = personPreUpdate;
+		personUpdated.setId(1L);
 
-				PersonVO personVO = mockPerson.mockVO();
+		Mockito.when(personRepository.save(personPreUpdate)).thenReturn(personUpdated);
 
-				PersonVO personVOUpdated = personService.update(personVO);
+		PersonVO personVO = mockPerson.mockVO();
 
-				assertNotNull(personVOUpdated);
-				
-				assertEquals(personVO.getKey(), personVOUpdated.getKey());
-				
-				assertNotNull(personVOUpdated.getKey());
-				assertNotNull(personVOUpdated.getLinks());
-				assertNotNull(personVOUpdated.toString().contains("links: "));
-		
-		
+		PersonVO personVOUpdated = personService.update(personVO);
+
+		assertNotNull(personVOUpdated);
+
+		assertEquals(personVO.getKey(), personVOUpdated.getKey());
+
+		assertNotNull(personVOUpdated.getKey());
+		assertNotNull(personVOUpdated.getLinks());
+		assertNotNull(personVOUpdated.toString().contains("links: "));
+
+	}
+
+	@Test
+	void testUpdateWithNullPerson() {
+
+		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+			personService.update(null);
+		});
+
+		String expectedMessage = "It is not allowed to persist a null object!";
+		String actualMessage = exception.getMessage();
+
+		assertEquals(expectedMessage, actualMessage);
 	}
 
 	@Test
 	void testDelete() {
-		
+
 		Person personPreDelete = mockPerson.mockEntity();
 		personPreDelete.setId(1L);
-	
+
 		Mockito.when(personRepository.findById(1L)).thenReturn(Optional.of(personPreDelete));
-		
+
 		personService.delete(1L);
-		
+
 	}
 
 }
