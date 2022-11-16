@@ -10,11 +10,11 @@ public class MockPerson {
 
 
     public Person mockEntity() {
-        return mockEntity(0);
+        return mockEntity(1);
     }
     
     public PersonVO mockVO() {
-        return mockVO(0);
+        return mockVO(1);
     }
     
     public List<Person> mockEntityList() {
@@ -48,7 +48,7 @@ public class MockPerson {
         person.setAddress("Addres Test" + number);
         person.setFirstName("First Name Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
-        person.setId(number.longValue());
+        person.setKey(number.longValue());
         person.setLastName("Last Name Test" + number);
         return person;
     }
