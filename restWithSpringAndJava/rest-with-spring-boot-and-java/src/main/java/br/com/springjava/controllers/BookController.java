@@ -47,7 +47,7 @@ public class BookController {
 	}
 
 	@GetMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-	@Operation(summary = "Find All Books", description = "Find all books", tags = { "Book" }, responses = {
+	@Operation(summary = "Find All Books", description = "Find all books", tags = { "Books" }, responses = {
 			@ApiResponse(description = "Success", responseCode = "200", content = {
 					@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BookVO.class))) }),
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),

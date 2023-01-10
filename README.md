@@ -21,6 +21,9 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Spring](https://spring.io/)
 - [Postman](https://www.postman.com/)
 - [MySQL](https://www.mysql.com/)
+- [Flyway](https://flywaydb.org/)
+- [jUnit](https://junit.org/junit5/)
+- [Mockito](https://site.mockito.org/)
 
 ### Autor
 
