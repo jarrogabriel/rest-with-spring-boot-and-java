@@ -45,7 +45,23 @@ public class JwtTokenProvider {
 
 	}
 
-	public TokenVO createAccessToken(String username, List<String> roles) {
+	public TokenVO refreshToken(String refreshToken) {
+		
+		if(refreshToken.contains("Bearer" ))
+		{
+			refreshToken = refreshToken.substring(("Bearer ").length());
+		}
+		
+		JWTVerifier verifier = JWT.require(algorithm).build();
+		DecodedJWT decodedJWT = verifier.verify(refreshToken);
+		
+		String username = decodedJWT.getSubject();
+		List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+		
+		return createAccessToken(username, roles);
+		
+	}
+		public TokenVO createAccessToken(String username, List<String> roles) {
 
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -80,9 +96,9 @@ public class JwtTokenProvider {
 
 	private DecodedJWT decodedToken(String token) {
 
-		Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
+		Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
 
-		JWTVerifier verifier = JWT.require(alg).build();
+		JWTVerifier verifier = JWT.require(algorithm).build();
 		DecodedJWT decodedJWT = verifier.verify(token);
 
 		return decodedJWT;

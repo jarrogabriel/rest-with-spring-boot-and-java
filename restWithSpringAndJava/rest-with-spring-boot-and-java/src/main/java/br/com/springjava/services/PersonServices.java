@@ -34,6 +34,7 @@ public class PersonServices {
 		listPersonsVO.stream().forEach(personVO -> personVO
 				.add(linkTo(methodOn(PersonController.class).findById(personVO.getKey())).withSelfRel()));
 
+		
 		return listPersonsVO;
 	}
 
